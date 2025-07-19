@@ -91,7 +91,7 @@ namespace SLWardrobe
                 var updater = player.GameObject.AddComponent<SuitUpdater>();
                 updater.Initialize(player);
                 
-                Log.Info($"Applied suit with {suitData.Parts.Count} parts to {player.Nickname}");
+                Log.Debug($"Applied suit with {suitData.Parts.Count} parts to {player.Nickname}");
             }
         }
         

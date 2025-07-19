@@ -39,51 +39,17 @@ namespace SLWardrobe
                 response = $"Player {playerId} not found.";
                 return false;
             }
+
+            string suitName = SLWardrobe.Instance.GetPlayerSuitName(target);
             
-            // Check for suit data in the new system
-            var suitData = SuitBinder.GetSuitData(target);
-            
-            if (suitData == null)
+            if (string.IsNullOrEmpty(suitName))
             {
                 response = $"{target.Nickname} has no suit equipped.";
-                return true;
             }
-            
-            response = $"{target.Nickname} has a suit with {suitData.Parts.Count} parts:\n";
-            
-            int activeCount = 0;
-            int destroyedCount = 0;
-            
-            foreach (var part in suitData.Parts)
+            else
             {
-                if (part != null && part.GameObject != null)
-                {
-                    activeCount++;
-                    var pos = part.GameObject.transform.position;
-                    var boneName = part.TargetBone != null ? part.TargetBone.name : "NONE";
-                    var active = part.GameObject.activeSelf ? "Active" : "Inactive";
-                    
-                    response += $"- {part.Binding.SchematicName} tracking {boneName} - {active} at ({pos.x:F1}, {pos.y:F1}, {pos.z:F1})\n";
-                    
-                    // Check for AdminToyBase component
-                    var adminToy = part.GameObject.GetComponent<AdminToys.AdminToyBase>();
-                    if (adminToy != null)
-                    {
-                        response += $"  AdminToy: Present, Scale: {adminToy.Scale}\n";
-                    }
-                }
-                else
-                {
-                    destroyedCount++;
-                    response += $"- {part.Binding?.SchematicName ?? "Unknown"} - DESTROYED\n";
-                }
+                response = $"{target.Nickname} is wearing: {suitName}";
             }
-            
-            response += $"\nSummary: {activeCount} active, {destroyedCount} destroyed";
-            
-            // Check for the updater component
-            var updater = target.GameObject.GetComponent<SuitUpdater>();
-            response += $"\nSuitUpdater component: {(updater != null ? "Present" : "Missing")}";
             
             return true;
         }

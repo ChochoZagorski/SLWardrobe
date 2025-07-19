@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
@@ -13,11 +15,13 @@ namespace SLWardrobe
     {
         public override string Name => "SLWardrobe";
         public override string Author => "ChochoZagorski";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 2, 0);
         public override Version RequiredExiledVersion => new Version(9, 6, 1);
         
         public static SLWardrobe Instance { get; private set; }
         private Dictionary<Player, string> playerSuitNames = new Dictionary<Player, string>();
+        private static readonly HttpClient HttpClient = new HttpClient();
+        private const string VERSION_URL = "https://raw.githubusercontent.com/ChochoZagorski/SLWardrobe/master/version.txt";
         
         public override void OnEnabled()
         {
@@ -26,7 +30,9 @@ namespace SLWardrobe
             Exiled.Events.Handlers.Player.Left += OnPlayerLeft;
             Exiled.Events.Handlers.Server.RoundEnded += OnRoundEnded;
             Exiled.Events.Handlers.Player.Died += OnPlayerDied;
+            Task.Run(async () => await CheckForUpdates());
             base.OnEnabled();
+            
         }
         
         public override void OnDisabled()
@@ -39,6 +45,36 @@ namespace SLWardrobe
             base.OnDisabled();
         }
         
+        private async Task CheckForUpdates()
+        {
+            try
+            {
+                HttpClient.DefaultRequestHeaders.Clear();
+                HttpClient.DefaultRequestHeaders.Add("User-Agent", "SLWardrobe-VersionChecker");
+        
+                string latestVersion = await HttpClient.GetStringAsync(VERSION_URL);
+                latestVersion = latestVersion.Trim();
+        
+                if (System.Version.TryParse(latestVersion, out var latest) && 
+                    System.Version.TryParse(Version.ToString(), out var current))
+                {
+                    if (latest > current)
+                    {
+                        Log.Warn($"[SLWardrobe] A new version is available! Current: {Version} | Latest: {latestVersion}");
+                        Log.Warn($"[SLWardrobe] Download at: https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
+                    }
+                    else
+                    {
+                        Log.Info($"[SLWardrobe] You are running the latest version ({Version})");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Debug($"[SLWardrobe] Could not check for updates: {ex.Message}");
+            }
+        }
+        
         private void OnChangingRole(Exiled.Events.EventArgs.Player.ChangingRoleEventArgs ev)
         {
             if (ev.NewRole == RoleTypeId.None || ev.NewRole == RoleTypeId.Spectator)
@@ -47,7 +83,6 @@ namespace SLWardrobe
             }
             else if (playerSuitNames.ContainsKey(ev.Player))
             {
-                // Reapply suit after role change
                 string suitName = playerSuitNames[ev.Player];
                 Timing.CallDelayed(1f, () => ApplySuit(ev.Player, suitName));
             }
@@ -77,21 +112,17 @@ namespace SLWardrobe
         {
             if (!Config.IsEnabled) return;
             if (player.Role == RoleTypeId.None || player.Role == RoleTypeId.Spectator) return;
-            
-            // Apply suit with a small delay to ensure player is fully spawned
             Timing.RunCoroutine(ApplySuitCoroutine(player, suitName));
         }
         
         private IEnumerator<float> ApplySuitCoroutine(Player player, string suitName)
         {
-            // Wait a moment for the player to be fully initialized
             yield return Timing.WaitForSeconds(0.5f);
             
             if (player == null || !player.IsAlive) yield break;
             
             List<BoneBinding> bindings = null;
-            
-            // Check config suits
+
             if (Config.Suits.ContainsKey(suitName))
             {
                 var suitConfig = Config.Suits[suitName];
@@ -102,19 +133,16 @@ namespace SLWardrobe
                 Log.Warn($"Unknown suit: {suitName}. Please define it in the config.");
                 yield break;
             }
-            
-            // Apply the suit using the new manual tracking system
+
             SuitBinder.ApplySuit(player, bindings);
             playerSuitNames[player] = suitName;
-            
-            // Verify after a delay
+
             yield return Timing.WaitForSeconds(1f);
             
             var suitData = SuitBinder.GetSuitData(player);
             if (suitData != null)
             {
                 int activeCount = suitData.Parts.Count(p => p.GameObject != null);
-                Log.Info($"Suit verification for {player.Nickname}: {activeCount}/{suitData.Parts.Count} parts active");
             }
         }
         
@@ -136,6 +164,10 @@ namespace SLWardrobe
             }
             
             return bindings;
+        }
+        public string GetPlayerSuitName(Player player)
+        {
+            return playerSuitNames.ContainsKey(player) ? playerSuitNames[player] : null;
         }
     }
 }
