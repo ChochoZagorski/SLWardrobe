@@ -14,9 +14,15 @@ namespace SLWardrobe
         
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
+            if (!sender.CheckPermission("slwardrobe.suits"))
+            {
+                response = "You can't wear suits, you don't have \"slwardrobe.suits\" permission.";
+                return false;
+            }
+            
             if (arguments.Count < 2)
             {
-                response = "Usage: suit <playerid> <suitname>\nExample: suit 2 test";
+                response = "Usage: suit <playerid> <suitname>\nExample: suit 2 example_suit";
                 return false;
             }
             

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
+using Exiled.Permissions.Extensions;
 
 namespace SLWardrobe
 {
@@ -14,6 +15,12 @@ namespace SLWardrobe
         
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
+            if (!sender.CheckPermission("slwardrobe.suits"))
+            {
+                response = "You can't check player for their attire, you don't have \"slwardrobe.suits\" permission.";
+                return false;
+            }
+            
             if (arguments.Count < 1)
             {
                 response = "Usage: checksuit <playerid>";
