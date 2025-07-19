@@ -4,7 +4,7 @@ using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
 
-namespace SLWardrobe
+namespace SLWardrobe.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class CheckSuitCommand : ICommand

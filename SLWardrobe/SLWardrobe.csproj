@@ -496,12 +496,13 @@
         </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckSuitCommand.cs" />
+    <Compile Include="Commands\CheckSuitCommand.cs" />
+    <Compile Include="Commands\RemoveSuitCommand.cs" />
+    <Compile Include="Commands\SuitCommand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuitBinder.cs" />
-    <Compile Include="SuitCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

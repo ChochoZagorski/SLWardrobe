@@ -3,30 +3,29 @@ using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
 
-namespace SLWardrobe
+namespace SLWardrobe.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class SuitCommand : ICommand
+    public class RemoveSuitCommand : ICommand
     {
-        public string Command => "suit";
+        public string Command => "removesuit";
         public string[] Aliases => Array.Empty<string>();
-        public string Description => "Apply a suit to a player";
+        public string Description => "Remove a suit from a player";
         
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("slwardrobe.suits"))
             {
-                response = "You can't wear suits, you don't have \"slwardrobe.suits\" permission.";
+                response = "You can't remove suits, you don't have \"slwardrobe.suits\" permission.";
                 return false;
             }
             
-            if (arguments.Count < 2)
+            if (arguments.Count < 1)
             {
-                response = "Usage: suit <playerid> <suitname>\nExample: suit 2 example_suit";
+                response = "Usage: suit <playerid> \nExample: removesuit 2";
                 return false;
             }
-            
-            // Get player
+
             if (!int.TryParse(arguments.At(0), out int playerId))
             {
                 response = "Invalid player ID. Use a number.";
@@ -39,14 +38,10 @@ namespace SLWardrobe
                 response = $"Player with ID {playerId} not found.";
                 return false;
             }
+
+            SuitBinder.RemoveSuit(target);
             
-            // Get suit name
-            string suitName = arguments.At(1);
-            
-            // Apply suit
-            SLWardrobe.Instance.ApplySuit(target, suitName);
-            
-            response = $"Applied suit '{suitName}' to {target.Nickname}";
+            response = $"Removed the suit that {target.Nickname} wore.";
             return true;
         }
     }

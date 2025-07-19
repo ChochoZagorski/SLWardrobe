@@ -12,6 +12,9 @@ namespace SLWardrobe
         [Description("Enable debug logging")]
         public bool Debug { get; set; } = false;
         
+        [Description("How often to update suit positions in seconds (default: 0.033)")]
+        public float SuitUpdateInterval { get; set; } = 0.033f;
+        
         [Description("Define custom suits. Each suit has a name and a list of parts.")]
         public Dictionary<string, SuitConfig> Suits { get; set; } = new Dictionary<string, SuitConfig>
         {
