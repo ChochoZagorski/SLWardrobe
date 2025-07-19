@@ -12,3 +12,10 @@ The installation is very simple. All you need to do is go to ``%AppData%\EXILED\
 
 # Config
 The config file is auto-generated and is located at: ``%AppData%\EXILED\Configs\Plugins\s_l_wardrobe\(ServerPortHere).yml`` (``~/.config/EXILED/Configs/Plugins/s_l_wardrobe/(ServerPortHere).yml`` on Linux)
+
+# Commands
+Currently all commands require access to the Remote Admin Panel
+The command to wear a suit is ``suit (player id) (suitname)`` and to check if a player is wearing a suit is ``checksuit (player id)``
+
+# Permissions
+ - ``slwardrobe.suits``
