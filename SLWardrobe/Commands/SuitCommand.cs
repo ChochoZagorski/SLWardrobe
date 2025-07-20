@@ -40,6 +40,12 @@ namespace SLWardrobe.Commands
             }
 
             string suitName = arguments.At(1);
+            
+            if (!SLWardrobe.Instance.Config.Suits.ContainsKey(suitName))
+            {
+                response = $"Unknown suit: {suitName}. Please check the name you've entered or define it in the config.";
+                return false;
+            }
 
             SLWardrobe.Instance.ApplySuit(target, suitName);
             

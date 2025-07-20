@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
-using Exiled.API.Features;
-using Exiled.API.Enums;
 using MEC;
 using UnityEngine;
 using PlayerRoles;
+using Exiled.API.Enums;
+using Exiled.API.Features;
 
 namespace SLWardrobe
 {
@@ -15,7 +15,7 @@ namespace SLWardrobe
     {
         public override string Name => "SLWardrobe";
         public override string Author => "ChochoZagorski";
-        public override Version Version => new Version(1, 3, 0 );
+        public override Version Version => new Version(1, 4, 0 );
         public override Version RequiredExiledVersion => new Version(9, 6, 1);
         
         public static SLWardrobe Instance { get; private set; }
@@ -55,13 +55,17 @@ namespace SLWardrobe
                 string latestVersion = await HttpClient.GetStringAsync(VERSION_URL);
                 latestVersion = latestVersion.Trim();
         
-                if (System.Version.TryParse(latestVersion, out var latest) && 
-                    System.Version.TryParse(Version.ToString(), out var current))
+                if (System.Version.TryParse(latestVersion, out var latest) && System.Version.TryParse(Version.ToString(), out var current))
                 {
                     if (latest > current)
                     {
                         Log.Warn($"[SLWardrobe] A new version is available! Current: {Version} | Latest: {latestVersion}");
-                        Log.Warn($"[SLWardrobe] Download at: https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
+                        Log.Warn("[SLWardrobe] Download at: https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
+                    }
+                    else if (latest < current)
+                    {
+                        Log.Warn($"[SLWardrobe] There is a... Wait a minute, how do you have a future version? Anyways your version: {Version} | Latest: {latestVersion}");
+                        Log.Warn("[SLWardrobe] Seriously how?");
                     }
                     else
                     {

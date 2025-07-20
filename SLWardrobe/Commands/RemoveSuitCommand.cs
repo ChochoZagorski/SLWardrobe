@@ -9,7 +9,7 @@ namespace SLWardrobe.Commands
     public class RemoveSuitCommand : ICommand
     {
         public string Command => "removesuit";
-        public string[] Aliases => Array.Empty<string>();
+        public string[] Aliases => new[] { "rms" };
         public string Description => "Remove a suit from a player";
         
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -22,7 +22,7 @@ namespace SLWardrobe.Commands
             
             if (arguments.Count < 1)
             {
-                response = "Usage: suit <playerid> \nExample: removesuit 2";
+                response = "Usage: removesuit <playerid> \nExample: removesuit 2";
                 return false;
             }
 

@@ -164,69 +164,6 @@ namespace SLWardrobe
                         ScaleZ = 1f
                     }
                 }
-            },
-            ["armor_suit"] = new SuitConfig
-            {
-                Description = "Heavy armor suit",
-                Parts = new List<SuitPartConfig>
-                {
-                    new SuitPartConfig
-                    {
-                        SchematicName = "helmet",
-                        BoneName = "Head",
-                        PositionX = 0f,
-                        PositionY = 0.05f,
-                        PositionZ = 0f,
-                        RotationX = 0f,
-                        RotationY = 0f,
-                        RotationZ = 0f,
-                        ScaleX = 1.1f,
-                        ScaleY = 1.1f,
-                        ScaleZ = 1.1f
-                    },
-                    new SuitPartConfig
-                    {
-                        SchematicName = "chestplate",
-                        BoneName = "Chest",
-                        PositionX = 0f,
-                        PositionY = 0f,
-                        PositionZ = 0f,
-                        RotationX = 0f,
-                        RotationY = 0f,
-                        RotationZ = 0f,
-                        ScaleX = 1.2f,
-                        ScaleY = 1.2f,
-                        ScaleZ = 1.2f
-                    },
-                    new SuitPartConfig
-                    {
-                        SchematicName = "shoulderpad_left",
-                        BoneName = "Arm.L",
-                        PositionX = 0f,
-                        PositionY = 0.1f,
-                        PositionZ = 0f,
-                        RotationX = 0f,
-                        RotationY = 0f,
-                        RotationZ = 0f,
-                        ScaleX = 1f,
-                        ScaleY = 1f,
-                        ScaleZ = 1f
-                    },
-                    new SuitPartConfig
-                    {
-                        SchematicName = "shoulderpad_right",
-                        BoneName = "Arm.R",
-                        PositionX = 0f,
-                        PositionY = 0.1f,
-                        PositionZ = 0f,
-                        RotationX = 0f,
-                        RotationY = 0f,
-                        RotationZ = 0f,
-                        ScaleX = 1f,
-                        ScaleY = 1f,
-                        ScaleZ = 1f
-                    }
-                }
             }
         };
     }

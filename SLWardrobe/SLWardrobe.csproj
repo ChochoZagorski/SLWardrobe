@@ -497,6 +497,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CheckSuitCommand.cs" />
+    <Compile Include="Commands\ListSuitsCommand.cs" />
     <Compile Include="Commands\RemoveSuitCommand.cs" />
     <Compile Include="Commands\SuitCommand.cs" />
     <Compile Include="Config.cs" />
