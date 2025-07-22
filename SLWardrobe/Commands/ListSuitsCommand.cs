@@ -37,16 +37,17 @@ namespace SLWardrobe.Commands
             {
                 sb.AppendLine($"Name: {suit.Key}");
                 sb.AppendLine($"Description: {suit.Value.Description}");
-                
+    
                 if (arguments.Count > 0 && arguments.At(0).ToLower() == "detailed")
                 {
-                    sb.AppendLine($"Parts: {suit.Value.Parts.Count}");   
+                    sb.AppendLine($"Parts: {suit.Value.Parts.Count}");
                     foreach (var part in suit.Value.Parts)
                     {
-                        sb.AppendLine($"  - {part.SchematicName} on {part.BoneName}");
+                        string visibility = part.HideForWearer ? "Hidden from Wearer" : "Visible to Wearer";
+                        sb.AppendLine($"  - {part.SchematicName} on {part.BoneName} ({visibility})");
                     }
                 }
-                
+    
                 sb.AppendLine("--------------------------------");
             }
             

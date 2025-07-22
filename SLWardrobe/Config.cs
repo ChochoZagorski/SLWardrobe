@@ -35,7 +35,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -49,7 +50,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -63,7 +65,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -77,7 +80,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -91,7 +95,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -105,7 +110,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -119,7 +125,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -133,7 +140,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -147,7 +155,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     },
                     new SuitPartConfig
                     {
@@ -161,7 +170,8 @@ namespace SLWardrobe
                         RotationZ = 0f,
                         ScaleX = 1f,
                         ScaleY = 1f,
-                        ScaleZ = 1f
+                        ScaleZ = 1f,
+                        HideForWearer = false
                     }
                 }
             }
@@ -211,5 +221,8 @@ namespace SLWardrobe
         
         [Description("Scale Z")]
         public float ScaleZ { get; set; } = 1f;
+        
+        [Description("Hide this part from the player wearing the suit (other players will still see it)")]
+        public bool HideForWearer { get; set; } = false;
     }
 }

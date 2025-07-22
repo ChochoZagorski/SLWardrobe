@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using UnityEngine;
 using Exiled.API.Features;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace SLWardrobe
     public static class SuitBinder
     {
         private static Dictionary<Player, SuitData> activeSuits = new Dictionary<Player, SuitData>();
+        private static readonly MethodInfo HideForConnectionMethod = typeof(NetworkServer)
+            .GetMethod("HideForConnection", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
         
         public static void ApplySuit(Player player, List<BoneBinding> bindings)
         {
@@ -21,6 +24,7 @@ namespace SLWardrobe
 
             var hitboxes = player.GameObject.GetComponentsInChildren<HitboxIdentity>();
             var boneMap = new Dictionary<string, Transform>();
+            
             
             foreach (var hitbox in hitboxes)
             {
@@ -67,6 +71,29 @@ namespace SLWardrobe
                     };
                     
                     suitData.Parts.Add(partData);
+                    
+                    if (binding.HideForWearer && schematic != null)
+                    {
+                        try
+                        {
+                            foreach (var netId in schematic.NetworkIdentities)
+                            {
+                                if (HideForConnectionMethod != null)
+                                {
+                                    HideForConnectionMethod.Invoke(null, new object[] { netId, player.Connection });
+                                    Log.Debug($"Hid {binding.SchematicName} from {player.Nickname}");
+                                }
+                                else
+                                {
+                                    Log.Error("HideForConnection method not found via reflection!");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Failed to hide {binding.SchematicName} from wearer: {ex.Message}");
+                        }
+                    }
                     
                     Log.Debug($"Created suit part {binding.SchematicName} for bone {binding.BoneName}");
                 }
@@ -255,7 +282,8 @@ namespace SLWardrobe
         public Vector3 LocalPosition { get; set; }
         public Vector3 LocalRotation { get; set; }
         public Vector3 Scale { get; set; }
-        
+        public bool HideForWearer { get; set; }
+    
         public BoneBinding(string schematicName, string boneName, Vector3 position, Vector3 rotation, Vector3 scale)
         {
             SchematicName = schematicName;
@@ -263,6 +291,7 @@ namespace SLWardrobe
             LocalPosition = position;
             LocalRotation = rotation;
             Scale = scale;
+            HideForWearer = false;
         }
     }
 }

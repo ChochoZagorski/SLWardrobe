@@ -15,7 +15,7 @@ namespace SLWardrobe
     {
         public override string Name => "SLWardrobe";
         public override string Author => "ChochoZagorski";
-        public override Version Version => new Version(1, 4, 0 );
+        public override Version Version => new Version(1, 5, 0 );
         public override Version RequiredExiledVersion => new Version(9, 6, 1);
         
         public static SLWardrobe Instance { get; private set; }
@@ -64,8 +64,8 @@ namespace SLWardrobe
                     }
                     else if (latest < current)
                     {
-                        Log.Warn($"[SLWardrobe] There is a... Wait a minute, how do you have a future version? Anyways your version: {Version} | Latest: {latestVersion}");
-                        Log.Warn("[SLWardrobe] Seriously how?");
+                        Log.Info($"[SLWardrobe] There is a... Wait a minute, how do you have a future version? Anyways your version: {Version} | Latest: {latestVersion}");
+                        Log.Info("[SLWardrobe] Seriously how?");
                     }
                     else
                     {
@@ -148,7 +148,7 @@ namespace SLWardrobe
         private List<BoneBinding> ConvertConfigToBindings(SuitConfig suitConfig)
         {
             var bindings = new List<BoneBinding>();
-            
+    
             foreach (var part in suitConfig.Parts)
             {
                 var binding = new BoneBinding(
@@ -158,10 +158,12 @@ namespace SLWardrobe
                     new Vector3(part.RotationX, part.RotationY, part.RotationZ),
                     new Vector3(part.ScaleX, part.ScaleY, part.ScaleZ)
                 );
-                
+        
+                binding.HideForWearer = part.HideForWearer;
+        
                 bindings.Add(binding);
             }
-            
+    
             return bindings;
         }
         public string GetPlayerSuitName(Player player)
