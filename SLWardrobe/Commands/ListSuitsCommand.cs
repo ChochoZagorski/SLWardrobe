@@ -37,6 +37,7 @@ namespace SLWardrobe.Commands
             {
                 sb.AppendLine($"Name: {suit.Key}");
                 sb.AppendLine($"Description: {suit.Value.Description}");
+                sb.AppendLine($"Wearer Type: {suit.Value.WearerType}");
     
                 if (arguments.Count > 0 && arguments.At(0).ToLower() == "detailed")
                 {

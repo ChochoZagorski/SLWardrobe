@@ -21,12 +21,13 @@ namespace SLWardrobe
             ["example_suit"] = new SuitConfig
             {
                 Description = "The example suit",
+                WearerType = "Human",
                 Parts = new List<SuitPartConfig>
                 {
                     new SuitPartConfig
                     {
                         SchematicName = "head",
-                        BoneName = "Head",
+                        BoneName = "head",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -41,7 +42,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "body",
-                        BoneName = "SpineMiddle",
+                        BoneName = "body",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -56,7 +57,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "leftarm",
-                        BoneName = "Arm.L",
+                        BoneName = "leftarm",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -71,7 +72,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "rightarm",
-                        BoneName = "Arm.R",
+                        BoneName = "rightarm",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -86,7 +87,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "leftforearm",
-                        BoneName = "Forearm.L",
+                        BoneName = "leftforearm",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -101,7 +102,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "rightforearm",
-                        BoneName = "Forearm.R",
+                        BoneName = "rightforearm",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -116,7 +117,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "leftthigh",
-                        BoneName = "Thigh.L",
+                        BoneName = "leftthigh",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -131,7 +132,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "rightthigh",
-                        BoneName = "Thigh.R",
+                        BoneName = "rightthigh",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -146,7 +147,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "leftleg",
-                        BoneName = "leg.L",
+                        BoneName = "leftleg",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -161,7 +162,7 @@ namespace SLWardrobe
                     new SuitPartConfig
                     {
                         SchematicName = "rightleg",
-                        BoneName = "leg.R",
+                        BoneName = "rightleg",
                         PositionX = 0f,
                         PositionY = 0f,
                         PositionZ = 0f,
@@ -183,6 +184,9 @@ namespace SLWardrobe
         [Description("Description of the suit")]
         public string Description { get; set; } = "Custom suit";
         
+        [Description("Wearer type for this suit (Human, SCP-3114, SCP-049-2, SCP-173,SCP-939, SCP-096, SCP-049, SCP-106)")]
+        public string WearerType { get; set; } = "Human";
+        
         [Description("List of parts that make up the suit")]
         public List<SuitPartConfig> Parts { get; set; } = new List<SuitPartConfig>();
     }
@@ -192,8 +196,8 @@ namespace SLWardrobe
         [Description("Name of the schematic to use")]
         public string SchematicName { get; set; } = "";
         
-        [Description("Name of the bone to attach to (Head, SpineMiddle, Arm.L, Arm.R, Forearm.L, Forearm.R, Thigh.L, Thigh.R, leg.L, leg.R)")]
-        public string BoneName { get; set; } = "SpineMiddle";
+        [Description("Name of the bone to attach to (consult with the README for more info)")]
+        public string BoneName { get; set; } = "body";
         
         [Description("Local position offset X")]
         public float PositionX { get; set; } = 0f;

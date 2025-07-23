@@ -38,10 +38,19 @@ namespace SLWardrobe.Commands
                 response = $"Player with ID {playerId} not found.";
                 return false;
             }
+            string suitName = SLWardrobe.Instance.GetPlayerSuitName(target);
+            
+            if (string.IsNullOrEmpty(suitName))
+            {
+                response = $"{target.Nickname} is not wearing a suit. Still gonna try to remove it.";
+            }
+            else
+            {
+                response = $"Removed {suitName} from {target.Nickname}";
+            }
 
             SuitBinder.RemoveSuit(target);
             
-            response = $"Removed the suit that {target.Nickname} wore.";
             return true;
         }
     }

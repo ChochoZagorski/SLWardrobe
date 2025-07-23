@@ -496,6 +496,7 @@
         </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoneMappings.cs" />
     <Compile Include="Commands\CheckSuitCommand.cs" />
     <Compile Include="Commands\ListSuitsCommand.cs" />
     <Compile Include="Commands\RemoveSuitCommand.cs" />
