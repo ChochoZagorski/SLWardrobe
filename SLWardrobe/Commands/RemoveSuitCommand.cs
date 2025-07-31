@@ -50,6 +50,7 @@ namespace SLWardrobe.Commands
             }
 
             SuitBinder.RemoveSuit(target);
+			SuitBinder.SetPlayerInvisibility(target, false);
             
             return true;
         }

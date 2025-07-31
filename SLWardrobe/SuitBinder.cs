@@ -7,6 +7,7 @@ using Mirror;
 using AdminToys;
 using Exiled.API.Features.Toys;
 using ProjectMER.Features;
+using Exiled.API.Features.Roles;
 
 namespace SLWardrobe
 {
@@ -205,6 +206,19 @@ namespace SLWardrobe
         public static SuitData GetSuitData(Player player)
         {
             return activeSuits.ContainsKey(player) ? activeSuits[player] : null;
+        }
+
+        public static void SetPlayerInvisibility(Player player, bool invisible)
+        {
+            if (player.Role is FpcRole fpcRole)
+            {
+                fpcRole.IsInvisible = invisible;
+                
+                if (invisible)
+                    Log.Debug($"Made {player.Nickname} invisible");
+                else
+                    Log.Debug($"Made {player.Nickname} visible");
+            }
         }
     }
     

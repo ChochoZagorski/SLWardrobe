@@ -21,6 +21,7 @@ namespace SLWardrobe
             ["example_suit"] = new SuitConfig
             {
                 Description = "The example suit",
+				MakeWearerInvisible = false,
                 WearerType = "Human",
                 Parts = new List<SuitPartConfig>
                 {
@@ -183,6 +184,9 @@ namespace SLWardrobe
     {
         [Description("Description of the suit")]
         public string Description { get; set; } = "Custom suit";
+
+        [Description("Makes the wearer completely invisible")]
+        public bool MakeWearerInvisible { get; set; } = false;  
         
         [Description("Wearer type for this suit (Human, SCP-3114, SCP-049-2, SCP-173,SCP-939, SCP-096, SCP-049, SCP-106)")]
         public string WearerType { get; set; } = "Human";

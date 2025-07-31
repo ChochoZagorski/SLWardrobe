@@ -15,7 +15,7 @@ namespace SLWardrobe
     {
         public override string Name => "SLWardrobe";
         public override string Author => "ChochoZagorski";
-        public override Version Version => new Version(1, 6, 0 );
+        public override Version Version => new Version(1, 7, 0 );
         public override Version RequiredExiledVersion => new Version(9, 6, 1);
         
         public static SLWardrobe Instance { get; private set; }
@@ -84,17 +84,20 @@ namespace SLWardrobe
             if (ev.NewRole == RoleTypeId.None || ev.NewRole == RoleTypeId.Spectator)
             {
                 SuitBinder.RemoveSuit(ev.Player);
+				SuitBinder.SetPlayerInvisibility(ev.Player, false);
             }
         }
         
         private void OnPlayerDied(Exiled.Events.EventArgs.Player.DiedEventArgs ev)
         {
             SuitBinder.RemoveSuit(ev.Player);
+			SuitBinder.SetPlayerInvisibility(ev.Player, false);
         }
         
         private void OnPlayerLeft(Exiled.Events.EventArgs.Player.LeftEventArgs ev)
         {
             SuitBinder.RemoveSuit(ev.Player);
+			SuitBinder.SetPlayerInvisibility(ev.Player, false);
             playerSuitNames.Remove(ev.Player);
         }
         
@@ -121,10 +124,11 @@ namespace SLWardrobe
             if (player == null || !player.IsAlive) yield break;
             
             List<BoneBinding> bindings = null;
+            SuitConfig suitConfig = null;
 
             if (Config.Suits.ContainsKey(suitName))
             {
-                var suitConfig = Config.Suits[suitName];
+                suitConfig = Config.Suits[suitName];
                 bindings = ConvertConfigToBindings(suitConfig);
             }
             else
@@ -135,6 +139,11 @@ namespace SLWardrobe
 
             SuitBinder.ApplySuit(player, bindings);
             playerSuitNames[player] = suitName;
+
+            if (suitConfig.MakeWearerInvisible)
+            {
+                SuitBinder.SetPlayerInvisibility(player, true);
+            }
 
             yield return Timing.WaitForSeconds(1f);
             
@@ -168,6 +177,7 @@ namespace SLWardrobe
     
             return bindings;
         }
+
         public string GetPlayerSuitName(Player player)
         {
             return playerSuitNames.ContainsKey(player) ? playerSuitNames[player] : null;
