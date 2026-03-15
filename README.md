@@ -5,9 +5,14 @@ SLWardrobe is a plugin made with the purpose of giving players to wear schematic
 It offers the ability for anyone to create "Suits" that could be worn by players.
 
 ### Dependencies
- - SCP: Secret Laboratory 14.1.1
- - Exiled 9.6.1
- - ProjectMER (and its Dependencies)
+ - SCP: Secret Laboratory 14.2.5
+ - [ProjectMER 2025.11.2.1](https://github.com/Michal78900/ProjectMER/releases/tag/2025.11.2.1) (and its Dependencies)
+ 
+ (Build Specific)
+ - [Exiled 9.13.1](https://github.com/ExMod-Team/EXILED/releases/tag/v9.13.1)
+ 
+ or
+ - [LabAPI 1.1.5](https://github.com/northwood-studios/LabAPI/releases/tag/1.1.5)
 
 ### Installation
 The installation is very simple. All you need to do is go to ``%AppData%\EXILED\Plugins`` (``~/.config/EXILED/Plugins`` on Linux) and drop the ``SLWardrobe.dll``.
@@ -32,4 +37,5 @@ The Suit and Weapon Configs are generated and located at: ``%AppData%\Exiled\Con
 For more information please check the wiki: https://github.com/ChochoZagorski/SLWardrobe/wiki/Configs
 
 ### Permissions
- - ``slwardrobe.suits``
+ - ``slwardrobe.use``
+ - ``slwardrobe.admin``
