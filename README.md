@@ -36,6 +36,17 @@ The Suit and Weapon Configs are generated and located at: ``%AppData%\Exiled\Con
 
 For more information please check the wiki: https://github.com/ChochoZagorski/SLWardrobe/wiki/Configs
 
+### Unity Tool
+
+1. Look at the ``SLWardrobeTools`` Folder and download the ``SLWardrobeEditor.cs`` File.
+2. From there open Your Unity install location and drop it in ``/SL-CustomObjects/Assets/DONTTOUCH/Scripts/``
+3. Once installed utilize a unity package that includes playermodels, such as the 14.1 or 14.2 Refereance packages found in #Schematic-Workshop in the MER Discord.
+4. Drag a player model from the Package. Unpackage it and Attach the SL Wardrobe Previewer Component.
+5. Create a Slot and Attach the Schematic and Bone in the Reference model to the component.
+6. Right Click the Component once done and click ``Attach Schematic to Bones``
+7. Once aligned Properly click ``Export offsets to Yaml``
+8. Create a New .yml file in the Suits section of the config and paste the Last Export section in.
+
 ### Permissions
  - ``slwardrobe.use``
  - ``slwardrobe.admin``
