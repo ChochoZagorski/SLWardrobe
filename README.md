@@ -19,7 +19,7 @@ Currently all commands require access to the Remote Admin Panel
  - ``slw remove (player id)`` removes the suit the player is currently wearing.
  - ``slw checksuit (player id)`` checks if a player is wearing a suit and what suit they are wearing.
  - ``slw list [suits|weapons]`` will list the correctly configured suits and weapons. Shows what model the suit|weapon is linked to, the suits|weapons schematic amount, and if it makes the wearer invisible.
- - ``slw create [suit|weapon] [name] [type]`` creates a config file for a new suit|weapon depending on what name and assigned type/model it was assigned. EX: ``slw create suit Jeff Human`` will list avilable types if command is run while empty.
+ - ``slw create [suit|weapon] [name] [type]`` creates a config file for a new suit|weapon depending on what name and assigned type/model it was assigned. EX: ``slw create suit Jeff Human``. If the command is run while prompts are empty it will list avilable types.
  - ``slw merge [Suit 1|Weapon 1] [Suit 2|Weapon 2] [name of output]`` Can merge the config of two suits or two weapons together into a new conifg. Does not delete the previous configs.
  - ``slw reload`` rechecks the config for changes or new suits.
  - ``slw debug`` provides debug information to the RA console such as what's active, what suits are loaded, what weapons are loaded,and what weapons are active.
