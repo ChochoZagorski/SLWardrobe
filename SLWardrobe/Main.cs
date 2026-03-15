@@ -28,7 +28,7 @@ namespace SLWardrobe
     {
         public override string Name => "SLWardrobe";
         public override string Author => "ChochoZagorski";
-        public override Version Version => new Version(1, 8, 0);
+        public override Version Version => new Version(2, 8, 1);
 
 #if EXILED
         public override string Prefix => "sl_wardrobe";

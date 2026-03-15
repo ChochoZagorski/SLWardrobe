@@ -279,11 +279,7 @@ namespace SLWardrobe.Weapons
                     else
                     {
                         var tracker = obj.AddComponent<BoneTracker>();
-                        tracker.Bone = boneTransform;
-                        tracker.LocalOffset = partOffset;
-                        tracker.RotationOffset = partRotation;
-                        tracker.FixedScale = obj.transform.localScale;
-                        tracker.LockScale = true;
+                        tracker.Init(boneTransform, partOffset, partRotation, obj.transform.localScale);
                         Log.Debug($"[WeaponBinder] Tracked part '{partDef.SchematicName}'");
                     }
 

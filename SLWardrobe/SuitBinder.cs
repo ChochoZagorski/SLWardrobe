@@ -220,11 +220,7 @@ namespace SLWardrobe
                     else
                     {
                         var tracker = obj.AddComponent<BoneTracker>();
-                        tracker.Bone = boneTransform;
-                        tracker.LocalOffset = binding.LocalPosition;
-                        tracker.RotationOffset = Quaternion.Euler(binding.LocalRotation);
-                        tracker.FixedScale = obj.transform.localScale;
-                        tracker.LockScale = true;
+                        tracker.Init(boneTransform, binding.LocalPosition, Quaternion.Euler(binding.LocalRotation), obj.transform.localScale);
                         Log.Debug($"[SuitBinder] Tracked part '{binding.SchematicName}' on '{binding.BoneName}'");
                     }
 

@@ -14,6 +14,21 @@ namespace SLWardrobe
         public Vector3 FixedScale;
         public bool LockScale = true;
 
+        private void Awake()
+        {
+            enabled = false;
+        }
+
+        public void Init(Transform bone, Vector3 localOffset, Quaternion rotationOffset, Vector3 fixedScale, bool lockScale = true)
+        {
+            Bone = bone;
+            LocalOffset = localOffset;
+            RotationOffset = rotationOffset;
+            FixedScale = fixedScale;
+            LockScale = lockScale;
+            enabled = true;
+        }
+
         private void Update()
         {
             if (Bone == null || transform.parent == null)
@@ -24,7 +39,7 @@ namespace SLWardrobe
 
             transform.localPosition = transform.parent.InverseTransformPoint(worldPos);
             transform.localRotation = Quaternion.Inverse(transform.parent.rotation) * worldRot;
-            
+
             if (LockScale)
             {
                 var parentLossy = transform.parent.lossyScale;
