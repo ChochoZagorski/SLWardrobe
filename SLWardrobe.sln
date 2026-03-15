@@ -6,11 +6,17 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		EXILED|Any CPU = EXILED|Any CPU
+		LabAPI|Any CPU = LabAPI|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BF80D550-A675-45FE-B6A1-44F47510E149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF80D550-A675-45FE-B6A1-44F47510E149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF80D550-A675-45FE-B6A1-44F47510E149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF80D550-A675-45FE-B6A1-44F47510E149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF80D550-A675-45FE-B6A1-44F47510E149}.Debug|Any CPU.ActiveCfg = LabAPI|Any CPU
+		{BF80D550-A675-45FE-B6A1-44F47510E149}.Debug|Any CPU.Build.0 = LabAPI|Any CPU
+		{BF80D550-A675-45FE-B6A1-44F47510E149}.EXILED|Any CPU.ActiveCfg = EXILED|Any CPU
+		{BF80D550-A675-45FE-B6A1-44F47510E149}.EXILED|Any CPU.Build.0 = EXILED|Any CPU
+		{BF80D550-A675-45FE-B6A1-44F47510E149}.LabAPI|Any CPU.ActiveCfg = LabAPI|Any CPU
+		{BF80D550-A675-45FE-B6A1-44F47510E149}.LabAPI|Any CPU.Build.0 = LabAPI|Any CPU
 	EndGlobalSection
 EndGlobal
