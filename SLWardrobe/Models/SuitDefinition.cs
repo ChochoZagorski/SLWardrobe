@@ -7,6 +7,7 @@ namespace SLWardrobe.Models
         public string Name { get; set; } = "unnamed_suit";
         public string Description { get; set; } = "Custom suit";
         public bool MakeWearerInvisible { get; set; } = false;
+        public bool AllowFadeRequest { get; set; } = true;
         public string WearerType { get; set; } = "Human";
         public List<SuitPartDefinition> Parts { get; set; } = new List<SuitPartDefinition>();
     }

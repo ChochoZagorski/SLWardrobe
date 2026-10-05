@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using CommandSystem;
+using SLWardrobe.Common;
+
 #if EXILED
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
@@ -19,12 +22,12 @@ namespace SLWardrobe.Commands
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
 #if EXILED
-            if (!sender.CheckPermission("slwardrobe.use"))
+            if (!sender.CheckPermission(PermissionNames.Use))
 #else
-            if (!sender.HasPermissions("slwardrobe.use"))
+            if (!sender.HasPermissions(PermissionNames.Use))
 #endif
             {
-                response = "Missing permission: slwardrobe.use";
+                response = $"Missing permission: {PermissionNames.Use}";
                 return false;
             }
 
@@ -34,12 +37,9 @@ namespace SLWardrobe.Commands
                 return false;
             }
 
-#if EXILED
-            var target = Player.Get(arguments.At(0));
-
-            if (target == null)
+            if (!Targets.TryResolveOne(arguments, 0, new List<Player>(), out var target, out string targetError))
             {
-                response = $"Player '{arguments.At(0)}' not found.";
+                response = targetError;
                 return false;
             }
 
@@ -52,30 +52,6 @@ namespace SLWardrobe.Commands
 
             SLWardrobe.Instance.ApplySuit(target, suitName);
             response = $"Applying suit '{suitName}' to {target.Nickname}.";
-#else
-            if (!int.TryParse(arguments.At(0), out int playerId))
-            {
-                response = "Invalid player ID. ID must be an integer.";
-                return false;
-            }
-
-            var target = Player.Get(playerId);
-            if (target == null)
-            {
-                response = $"Player with ID '{playerId}' not found.";
-                return false;
-            }
-
-            string suitName = arguments.At(1);
-            if (ConfigLoader.GetSuit(suitName) == null)
-            {
-                response = $"Suit '{suitName}' not found.\nUse 'slw list suits' to see available suits.";
-                return false;
-            }
-
-            SLWardrobe.Instance.ApplySuit(target, suitName);
-            response = $"Applying suit '{suitName}' to {target.Nickname}.";
-#endif
             return true;
         }
     }

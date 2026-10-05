@@ -1,5 +1,6 @@
 using System;
 using CommandSystem;
+using SLWardrobe.Common;
 #if EXILED
 using Exiled.Permissions.Extensions;
 #else
@@ -18,21 +19,19 @@ namespace SLWardrobe.Commands
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
 #if EXILED
-            if (!sender.CheckPermission("slwardrobe.admin"))
+            if (!sender.CheckPermission(PermissionNames.Admin))
 #else
-            if (!sender.HasPermissions("slwardrobe.admin"))
+            if (!sender.HasPermissions(PermissionNames.Admin))
 #endif
-            {
-                response = "Missing permission: slwardrobe.admin";
-                return false;
-            }
+            { response = $"Missing permission: {PermissionNames.Admin}"; return false; }
 
             ConfigLoader.ReloadAll();
-            WeaponBinder.Initialize();
+            WeaponDetector.Initialize();
 
-            response = $"Reloaded configurations.\n" +
-                       $"  Suits: {ConfigLoader.Suits.Count}\n" +
-                       $"  Weapons: {ConfigLoader.Weapons.Count}";
+            var config = SLWardrobe.Instance.Config;
+            CosmeticTracker.SetSmoothing(config.CoreSmoothing, config.LimbSmoothing);
+
+            response = $"Reloaded configurations.\n  Suits: {ConfigLoader.Suits.Count}\n  Weapons: {ConfigLoader.Weapons.Count}";
             return true;
         }
     }

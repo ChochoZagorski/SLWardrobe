@@ -135,7 +135,7 @@ namespace SLWardrobe.EditorTools
         [Tooltip("Hide this part from the wearer's own view")]
         public bool hideForWearer = false;
 
-        [Tooltip("Disables this part Rotation update, it will only follow the player via Parenting")]
+        [Tooltip("Part is placed once at spawn and not updated per-frame (position/rotation locked). Use for rigid, non-animated pieces.")]
         public bool isStatic = false;
     }
 }

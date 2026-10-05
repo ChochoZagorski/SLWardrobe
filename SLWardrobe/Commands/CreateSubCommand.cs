@@ -1,5 +1,6 @@
 using System;
 using CommandSystem;
+using SLWardrobe.Common;
 #if EXILED
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
@@ -19,12 +20,12 @@ namespace SLWardrobe.Commands
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
 #if EXILED
-            if (!sender.CheckPermission("slwardrobe.admin"))
+            if (!sender.CheckPermission(PermissionNames.Admin))
 #else
-            if (!sender.HasPermissions("slwardrobe.admin"))
+            if (!sender.HasPermissions(PermissionNames.Admin))
 #endif
             {
-                response = "Missing permission: slwardrobe.admin";
+                response = $"Missing permission: {PermissionNames.Admin}";
                 return false;
             }
 

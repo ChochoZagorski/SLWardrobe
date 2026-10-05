@@ -31,7 +31,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
     <!-- LabAPI builds -->
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LabAPI|AnyCPU' ">
@@ -57,7 +56,7 @@
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\Assembly-CSharp.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Assembly-CSharp-Publicized.dll</HintPath>
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Assembly-CSharp-Publicized.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp-firstpass">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\Assembly-CSharp-firstpass.dll</HintPath>
@@ -69,7 +68,7 @@
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\Caress.dll</HintPath>
         </Reference>
         <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\CommandSystem.Core.dll</HintPath>
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\CommandSystem.Core.dll</HintPath>
         </Reference>
         <Reference Include="CustomPasses">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\CustomPasses.dll</HintPath>
@@ -77,32 +76,32 @@
         <Reference Include="DnsClient">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\DnsClient.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.API, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.API.dll</HintPath>
+        <Reference Include="Exiled.API, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.API.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.CreditTags, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.CreditTags.dll</HintPath>
+        <Reference Include="Exiled.CreditTags, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.CreditTags.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.CustomItems, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.CustomItems.dll</HintPath>
+        <Reference Include="Exiled.CustomItems, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.CustomItems.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.CustomRoles, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.CustomRoles.dll</HintPath>
+        <Reference Include="Exiled.CustomRoles, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.CustomRoles.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.Events, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.Events.dll</HintPath>
+        <Reference Include="Exiled.Events, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.Events.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.Loader, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.Loader.dll</HintPath>
+        <Reference Include="Exiled.Loader, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.Loader.dll</HintPath>
         </Reference>
-        <Reference Include="Exiled.Permissions, Version=9.13.1.0, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\Exiled.Permissions.dll</HintPath>
+        <Reference Include="Exiled.Permissions, Version=9.14.2.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\Exiled.Permissions.dll</HintPath>
         </Reference>
         <Reference Include="Facepunch.Steamworks.Win64">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\Facepunch.Steamworks.Win64.dll</HintPath>
         </Reference>
-        <Reference Include="LabApi, Version=1.1.4.3, Culture=neutral, processorArchitecture=Amd64">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\LabApi.dll</HintPath>
+        <Reference Include="LabApi, Version=1.1.7.0, Culture=neutral, processorArchitecture=Amd64">
+          <HintPath>..\packages\Northwood.LabAPI.1.1.7\lib\net48\LabApi.dll</HintPath>
         </Reference>
         <Reference Include="MapEditorReborn">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\MapEditorReborn.dll</HintPath>
@@ -130,7 +129,7 @@
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\netstandard.dll</HintPath>
         </Reference>
         <Reference Include="NorthwoodLib, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\NorthwoodLib.dll</HintPath>
+          <HintPath>..\packages\ExMod.Exiled.9.14.2\lib\net48\NorthwoodLib.dll</HintPath>
         </Reference>
         <Reference Include="PluginAPI, Version=13.1.2.0, Culture=neutral, processorArchitecture=Amd64">
           <HintPath>..\packages\Northwood.PluginAPI.13.1.2\lib\net48\PluginAPI.dll</HintPath>
@@ -511,8 +510,8 @@
         <Reference Include="UnityEngine.XRModule">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\UnityEngine.XRModule.dll</HintPath>
         </Reference>
-        <Reference Include="YamlDotNet, Version=11.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExMod.Exiled.9.13.1\lib\net48\YamlDotNet.dll</HintPath>
+        <Reference Include="YamlDotNet, Version=18.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+          <HintPath>..\packages\YamlDotNet.18.0.0\lib\net47\YamlDotNet.dll</HintPath>
         </Reference>
         <Reference Include="zxing">
           <HintPath>..\..\..\AppData\Roaming\SCP Secret Laboratory\PluginReferences\zxing.dll</HintPath>
@@ -520,27 +519,38 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoneMappings.cs" />
-    <Compile Include="BoneTracker.cs" />
+    <Compile Include="Commands\BonesSubCommand.cs" />
     <Compile Include="Commands\CheckSubCommand.cs" />
     <Compile Include="Commands\CreateSubCommand.cs" />
     <Compile Include="Commands\DebugSubCommand.cs" />
+    <Compile Include="Commands\FadeClientCommand.cs" />
+    <Compile Include="Commands\FadeSubCommand.cs" />
     <Compile Include="Commands\ListSubCommand.cs" />
     <Compile Include="Commands\MergeSubCommand.cs" />
     <Compile Include="Commands\ReloadSubCommand.cs" />
     <Compile Include="Commands\RemoveSubCommand.cs" />
     <Compile Include="Commands\SlwCommand.cs" />
     <Compile Include="Commands\SuitSubCommand.cs" />
+    <Compile Include="Common\GatedLogger.cs" />
+    <Compile Include="Common\Messaging.cs" />
+    <Compile Include="Common\PermissionNames.cs" />
+    <Compile Include="Common\Targets.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="ConfigLoader.cs" />
+    <Compile Include="CosmeticBinder.cs" />
+    <Compile Include="CosmeticPatches.cs" />
+    <Compile Include="CosmeticTracker.cs" />
+    <Compile Include="FadeRequestHandler.cs" />
+    <Compile Include="HitboxTrackerHost.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Models\CosmeticData.cs" />
     <Compile Include="Models\SuitDefinition.cs" />
     <Compile Include="Models\WeaponDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SsssHandler.cs" />
-    <Compile Include="SuitBinder.cs" />
     <Compile Include="Weapons\IItemMatcher.cs" />
     <Compile Include="Weapons\ItemMatchers.cs" />
-    <Compile Include="Weapons\WeaponBinder.cs" />
+    <Compile Include="Weapons\WeaponDetector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

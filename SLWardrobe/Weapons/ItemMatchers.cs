@@ -1,4 +1,5 @@
 using System;
+using SLWardrobe.Common;
 #if EXILED
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
@@ -59,8 +60,9 @@ namespace SLWardrobe.Weapons
                            ci.Id.ToString() == identifier;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                GatedLogger.Debug($"[CustomItemMatcher] Lookup failed: {ex.Message}");
             }
 
             return false;

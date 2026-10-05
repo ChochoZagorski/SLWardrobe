@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using CommandSystem;
+using SLWardrobe.Common;
+
 #if EXILED
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
@@ -19,31 +22,22 @@ namespace SLWardrobe.Commands
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
 #if EXILED
-            if (!sender.CheckPermission("slwardrobe.use"))
+            if (!sender.CheckPermission(PermissionNames.Use))
 #else
-            if (!sender.HasPermissions("slwardrobe.use"))
+            if (!sender.HasPermissions(PermissionNames.Use))
 #endif
-            {
-                response = "Missing permission: slwardrobe.use";
-                return false;
-            }
+            { response = $"Missing permission: {PermissionNames.Use}"; return false; }
 
-            if (arguments.Count < 1)
-            {
-                response = "Usage: slw check <player>";
-                return false;
-            }
+            if (arguments.Count < 1) { response = "Usage: slw check <player>"; return false; }
 
-#if EXILED
-            var target = Player.Get(arguments.At(0));
-            if (target == null)
+            if (!Targets.TryResolveOne(arguments, 0, new List<Player>(), out var target, out string targetError))
             {
-                response = $"Player '{arguments.At(0)}' not found.";
+                response = targetError;
                 return false;
             }
 
             string suitName = SLWardrobe.Instance.GetPlayerSuitName(target);
-            var suitData = SuitBinder.GetSuitData(target);
+            var suitData = CosmeticBinder.GetSuitData(target);
 
             if (string.IsNullOrEmpty(suitName))
             {
@@ -53,50 +47,11 @@ namespace SLWardrobe.Commands
             {
                 int activeParts = 0;
                 if (suitData != null)
-                {
                     foreach (var part in suitData.Parts)
-                    {
-                        if (part.GameObject != null) activeParts++;
-                    }
-                }
+                        if (part.SchematicRoot != null) activeParts++;
 
                 response = $"{target.Nickname} is wearing: {suitName} ({activeParts} active parts)";
             }
-#else
-            if (!int.TryParse(arguments.At(0), out int playerId))
-            {
-                response = "Invalid player ID. ID must be an integer.";
-                return false;
-            }
-
-            var target = Player.Get(playerId);
-            if (target == null)
-            {
-                response = $"Player with ID '{playerId}' not found.";
-                return false;
-            }
-
-            string suitName = SLWardrobe.Instance.GetPlayerSuitName(target);
-            var suitData = SuitBinder.GetSuitData(target);
-
-            if (string.IsNullOrEmpty(suitName))
-            {
-                response = $"{target.Nickname} has no suit equipped.";
-            }
-            else
-            {
-                int activeParts = 0;
-                if (suitData != null)
-                {
-                    foreach (var part in suitData.Parts)
-                    {
-                        if (part.GameObject != null) activeParts++;
-                    }
-                }
-
-                response = $"{target.Nickname} is wearing: {suitName} ({activeParts} active parts)";
-            }
-#endif
             return true;
         }
     }

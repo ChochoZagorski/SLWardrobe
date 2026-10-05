@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using CommandSystem;
+using SLWardrobe.Common;
 #if EXILED
 using Exiled.Permissions.Extensions;
 #else
@@ -18,12 +19,12 @@ namespace SLWardrobe.Commands
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
 #if EXILED
-            if (!sender.CheckPermission("slwardrobe.use"))
+            if (!sender.CheckPermission(PermissionNames.Use))
 #else
-            if (!sender.HasPermissions("slwardrobe.use"))
+            if (!sender.HasPermissions(PermissionNames.Use))
 #endif
             {
-                response = "Missing permission: slwardrobe.use";
+                response = $"Missing permission: {PermissionNames.Use}";
                 return false;
             }
 
@@ -53,7 +54,7 @@ namespace SLWardrobe.Commands
                         var suit = kvp.Value;
                         sb.AppendLine($"  - {kvp.Key}");
                         sb.AppendLine($"      Type: {suit.WearerType} | Parts: {suit.Parts.Count} | Invisible: {suit.MakeWearerInvisible}");
-                        if (!string.IsNullOrEmpty(suit.Description) && suit.Description != "Custom suit")
+                        if (!string.IsNullOrEmpty(suit.Description))
                             sb.AppendLine($"      {suit.Description}");
                     }
                 }

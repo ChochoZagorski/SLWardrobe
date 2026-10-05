@@ -22,12 +22,22 @@ Currently all commands require access to the Remote Admin Panel
  - ``slw`` Lists all available Commands in the RA panel.
  - ``slw suit (player id) (suitname)`` applies the suit that is defined in the config.
  - ``slw remove (player id)`` removes the suit the player is currently wearing.
- - ``slw checksuit (player id)`` checks if a player is wearing a suit and what suit they are wearing.
+ - ``slw check (player id)`` checks if a player is wearing a suit and what suit they are wearing.
  - ``slw list [suits|weapons]`` will list the correctly configured suits and weapons. Shows what model the suit|weapon is linked to, the suits|weapons schematic amount, and if it makes the wearer invisible.
  - ``slw create [suit|weapon] [name] [type]`` creates a config file for a new suit|weapon depending on what name and assigned type/model it was assigned. EX: ``slw create suit Jeff Human``. If the command is run while prompts are empty it will list available types.
  - ``slw merge [Suit 1|Weapon 1] [Suit 2|Weapon 2] [name of output]`` Can merge the config of two suits or two weapons together into a new conifg. Does not delete the previous configs.
  - ``slw reload`` rechecks the config for changes or new suits.
  - ``slw debug`` provides debug information to the RA console such as what's active, what suits are loaded, what weapons are loaded,and what weapons are active.
+ - ``slw bones (player id) [wearerType]`` lists hitbox attach points on a player, for authoring suit YAML.
+ - ``slw fade [yes|no|off|on] [player]`` manages body-fade requests (see below).
+
+All commands accept player names as well as IDs, and most have short aliases (``s``, ``rm``, ``cs``, etc.), run ``slw`` with no arguments for the full list.
+
+### Fade Requests
+Players can ask an admin to hide their real body model, leaving only the cosmetic suit visible to observers, useful because server-side bone tracking can't perfectly match client-side animation timing. Disabled by default; enable ``FadeRequest.Enabled`` in the config to turn it on.
+ - Players request via the Server Specific Settings button, or the ``.fade`` client console command.
+ - Admins approve with ``slw fade yes`` (no target needed if there's exactly one pending request), deny with ``slw fade no``, and revoke with ``slw fade off <player|all>``.
+ - ``slw fade`` with no arguments shows the pending-request board.
 
 ### Config
 The config file is auto-generated and is located at: ``%AppData%\EXILED\Configs\Plugins\s_l_wardrobe\(ServerPortHere).yml`` (``~/.config/EXILED/Configs/Plugins/s_l_wardrobe/(ServerPortHere).yml`` on Linux)
@@ -38,7 +48,7 @@ For more information please check the wiki: https://github.com/ChochoZagorski/SL
 
 ### Unity Tool
 
-1. Look at the ``SLWardrobeTools`` Folder and download the ``SLWardrobeEditor.cs`` File.
+1. Look at the ``SLWardrobe Tools`` Folder and download the ``SLWardrobeEditor.cs`` File.
 2. From there open Your Unity install location and drop it in ``/SL-CustomObjects/Assets/DONTTOUCH/Scripts/``
 3. Once installed utilize a unity package that includes playermodels, such as the 14.1 or 14.2 Refereance packages found in #Schematic-Workshop in the MER Discord.
 4. Drag a player model from the Package. Unpackage it and Attach the SL Wardrobe Previewer Component.

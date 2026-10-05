@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using SLWardrobe.Common;
 using SLWardrobe.Models;
 
 #if EXILED
@@ -39,7 +40,7 @@ namespace SLWardrobe
         public static void SetPluginFolder(string path)
         {
             PluginFolder = path;
-            Log.Debug($"[ConfigLoader] Plugin folder set to: {PluginFolder}");
+            GatedLogger.Debug($"[ConfigLoader] Plugin folder set to: {PluginFolder}");
         }
 
         public static void EnsureDirectories()
@@ -54,7 +55,7 @@ namespace SLWardrobe
             {
                 Directory.CreateDirectory(SuitsFolder);
                 Directory.CreateDirectory(WeaponsFolder);
-                Log.Debug($"[ConfigLoader] Directories verified at: {PluginFolder}");
+                GatedLogger.Debug($"[ConfigLoader] Directories verified at: {PluginFolder}");
             }
             catch (Exception ex)
             {
@@ -109,7 +110,7 @@ namespace SLWardrobe
 
                     suit.Name = key;
                     LoadedSuits[key] = suit;
-                    Log.Debug($"[ConfigLoader] Loaded suit: {key} ({suit.Parts.Count} parts)");
+                    GatedLogger.Debug($"[ConfigLoader] Loaded suit: {key} ({suit.Parts.Count} parts)");
                 }
                 catch (Exception ex)
                 {
@@ -149,7 +150,7 @@ namespace SLWardrobe
 
                     weapon.Name = key;
                     LoadedWeapons[key] = weapon;
-                    Log.Debug($"[ConfigLoader] Loaded weapon: {key} ({weapon.Parts.Count} parts)");
+                    GatedLogger.Debug($"[ConfigLoader] Loaded weapon: {key} ({weapon.Parts.Count} parts)");
                 }
                 catch (Exception ex)
                 {
@@ -191,7 +192,7 @@ namespace SLWardrobe
             }
             catch (Exception ex)
             {
-                Log.Debug($"[ConfigLoader] Could not scan parent dir for legacy files: {ex.Message}");
+                GatedLogger.Debug($"[ConfigLoader] Could not scan parent dir for legacy files: {ex.Message}");
             }
 
             foreach (var file in candidates)
@@ -227,8 +228,9 @@ namespace SLWardrobe
                 return data.ContainsKey("suits") &&
                        (data.ContainsKey("is_enabled") || data.ContainsKey("suit_update_interval"));
             }
-            catch
+            catch (Exception ex)
             {
+                GatedLogger.Debug($"[ConfigLoader] Legacy-format probe failed for '{Path.GetFileName(filePath)}': {ex.Message}");
                 return false;
             }
         }
@@ -258,7 +260,7 @@ namespace SLWardrobe
 
                 if (File.Exists(targetPath))
                 {
-                    Log.Warn($"[ConfigLoader] Skipping migration of '{suitName}' — file already exists.");
+                    Log.Warn($"[ConfigLoader] Skipping migration of '{suitName}' - file already exists.");
                     continue;
                 }
 

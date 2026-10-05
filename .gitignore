@@ -1,0 +1,13 @@
+# Build output
+bin/
+obj/
+
+# NuGet
+packages/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.DotSettings.user

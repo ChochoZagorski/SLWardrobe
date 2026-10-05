@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using HarmonyLib;
 using MEC;
 using UnityEngine;
 using PlayerRoles;
+using SLWardrobe.Common;
 using SLWardrobe.Models;
 using SLWardrobe.Weapons;
 
@@ -28,7 +29,7 @@ namespace SLWardrobe
     {
         public override string Name => "SLWardrobe";
         public override string Author => "ChochoZagorski";
-        public override Version Version => new Version(2, 8, 1);
+        public override Version Version => new Version(2, 9, 0);
 
 #if EXILED
         public override string Prefix => "sl_wardrobe";
@@ -44,11 +45,14 @@ namespace SLWardrobe
 
         private readonly Dictionary<Player, string> playerSuitNames = new Dictionary<Player, string>();
         private static readonly HttpClient HttpClient = new HttpClient();
+        private Harmony _harmony;
 
         private const string VERSION_URL = "https://raw.githubusercontent.com/ChochoZagorski/SLWardrobe/master/version.txt";
         private const string UPDATE_JSON_URL = "https://raw.githubusercontent.com/ChochoZagorski/SLWardrobe/master/update_info.json";
+        private const string RELEASE_TAG = "1.9.0-beta.1";
 
         public SsssHandler SsssHandler { get; private set; }
+        public FadeRequestHandler FadeHandler { get; private set; }
 
         public static string BuildFramework
         {
@@ -63,32 +67,27 @@ namespace SLWardrobe
         }
 
 #if EXILED
-        public override void OnEnabled()
-        {
-            PluginEnabled();
-            base.OnEnabled();
-        }
-
-        public override void OnDisabled()
-        {
-            PluginDisabled();
-            base.OnDisabled();
-        }
+        public override void OnEnabled() { PluginEnabled(); base.OnEnabled(); }
+        public override void OnDisabled() { PluginDisabled(); base.OnDisabled(); }
 #else
-        public override void Enable()
-        {
-            PluginEnabled();
-        }
-
-        public override void Disable()
-        {
-            PluginDisabled();
-        }
+        public override void Enable() { PluginEnabled(); }
+        public override void Disable() { PluginDisabled(); }
 #endif
 
         private void PluginEnabled()
         {
             Instance = this;
+
+            Log.Info($"[SLWardrobe] v{RELEASE_TAG} ({BuildFramework})");
+
+            _harmony = new Harmony("com.chochozagorski.slwardrobe");
+            _harmony.PatchAll();
+            Log.Info("[SLWardrobe] Harmony patches applied.");
+
+            var trackerGo = new GameObject("[SLWardrobe.Tracker]");
+            UnityEngine.Object.DontDestroyOnLoad(trackerGo);
+            trackerGo.AddComponent<HitboxTrackerHost>();
+            Log.Info("[SLWardrobe] Hitbox tracker host created.");
 
 #if EXILED
             ConfigLoader.SetPluginFolder(System.IO.Path.Combine(Paths.Configs, "SLWardrobe"));
@@ -97,10 +96,14 @@ namespace SLWardrobe
 #endif
 
             ConfigLoader.LoadAll();
-            WeaponBinder.Initialize();
+            WeaponDetector.Initialize();
+            CosmeticTracker.SetSmoothing(Config.CoreSmoothing, Config.LimbSmoothing);
 
             SsssHandler = new SsssHandler();
             SsssHandler.Register();
+
+            FadeHandler = new FadeRequestHandler();
+            FadeHandler.Register();
 
 #if EXILED
             Exiled.Events.Handlers.Player.ChangingRole += OnChangingRole;
@@ -122,13 +125,20 @@ namespace SLWardrobe
 
         private void PluginDisabled()
         {
+            if (HitboxTrackerHost.Instance != null)
+                UnityEngine.Object.Destroy(HitboxTrackerHost.Instance.gameObject);
+
             SsssHandler?.Unregister();
             SsssHandler = null;
 
-            SuitBinder.StopGlobalUpdater();
-            SuitBinder.StopLodUpdater();
-            WeaponBinder.StopUpdater();
-            WeaponBinder.RemoveAllWeapons();
+            FadeHandler?.Unregister();
+            FadeHandler = null;
+
+            CosmeticBinder.RemoveAllPlayers();
+            WeaponDetector.StopUpdater();
+
+            _harmony?.UnpatchAll(_harmony.Id);
+            _harmony = null;
 
 #if EXILED
             Exiled.Events.Handlers.Player.ChangingRole -= OnChangingRole;
@@ -151,13 +161,14 @@ namespace SLWardrobe
 
         private void OnRoundStarted()
         {
-            Log.Debug("[SLWardrobe] Round started.");
-            WeaponBinder.Initialize();
+            GatedLogger.Debug("[SLWardrobe] Round started.");
+            WeaponDetector.Initialize();
+            FadeHandler?.ResetRoundState();
 
             if (ConfigLoader.Weapons.Count > 0)
             {
-                WeaponBinder.StartUpdater((float)Config.UpdateInterval);
-                Log.Debug($"[SLWardrobe] Weapon updater started ({ConfigLoader.Weapons.Count} weapons)");
+                WeaponDetector.StartUpdater((float)Config.UpdateInterval);
+                GatedLogger.Debug($"[SLWardrobe] Weapon detector started ({ConfigLoader.Weapons.Count} weapons)");
             }
         }
 
@@ -168,22 +179,17 @@ namespace SLWardrobe
                 CleanupPlayer(ev.Player);
         }
 
-        private void OnPlayerDied(Exiled.Events.EventArgs.Player.DiedEventArgs ev)
-        {
-            CleanupPlayer(ev.Player);
-        }
+        private void OnPlayerDied(Exiled.Events.EventArgs.Player.DiedEventArgs ev) => CleanupPlayer(ev.Player);
 
         private void OnPlayerLeft(Exiled.Events.EventArgs.Player.LeftEventArgs ev)
         {
             CleanupPlayer(ev.Player);
             SsssHandler?.CleanupPlayer(ev.Player);
+            FadeHandler?.CleanupPlayer(ev.Player);
             playerSuitNames.Remove(ev.Player);
         }
 
-        private void OnRoundEnded(Exiled.Events.EventArgs.Server.RoundEndedEventArgs ev)
-        {
-            RoundCleanup();
-        }
+        private void OnRoundEnded(Exiled.Events.EventArgs.Server.RoundEndedEventArgs ev) => RoundCleanup();
 #else
         private void OnChangingRole(PlayerChangingRoleEventArgs ev)
         {
@@ -204,34 +210,27 @@ namespace SLWardrobe
         {
             var player = Player.Get(ev.Player.ReferenceHub);
             if (player == null) return;
-
             CleanupPlayer(player);
             SsssHandler?.CleanupPlayer(player);
+            FadeHandler?.CleanupPlayer(player);
             playerSuitNames.Remove(player);
         }
 
-        private void OnRoundEnded(RoundEndedEventArgs ev)
-        {
-            RoundCleanup();
-        }
+        private void OnRoundEnded(RoundEndedEventArgs ev) => RoundCleanup();
 #endif
 
         private void RoundCleanup()
         {
-            foreach (var player in Player.List)
-                SuitBinder.RemoveSuit(player);
-
+            CosmeticBinder.RemoveAllPlayers();
+            WeaponDetector.RemoveAllWeapons();
             playerSuitNames.Clear();
-            SuitBinder.StopGlobalUpdater();
-            SuitBinder.StopLodUpdater();
-            WeaponBinder.RemoveAllWeapons();
         }
 
         private void CleanupPlayer(Player player)
         {
-            SuitBinder.RemoveSuit(player);
-            SuitBinder.SetPlayerInvisibility(player, false);
-            WeaponBinder.RemoveWeapon(player);
+            CosmeticBinder.RemoveAll(player);
+            CosmeticBinder.SetPlayerInvisibility(player, false);
+            FadeHandler?.OnPlayerReset(player);
         }
 
         #endregion
@@ -258,50 +257,40 @@ namespace SLWardrobe
                 yield break;
             }
 
-            var bindings = ConvertDefinitionToBindings(definition);
-            SuitBinder.ApplySuit(player, bindings);
+            var bindings = ConvertSuitToBindings(definition);
+            CosmeticBinder.ApplySuit(player, bindings);
             playerSuitNames[player] = suitName;
 
             if (definition.MakeWearerInvisible)
-                SuitBinder.SetPlayerInvisibility(player, true);
+                CosmeticBinder.SetPlayerInvisibility(player, true);
 
-            yield return Timing.WaitForSeconds(1f);
-
-            var suitData = SuitBinder.GetSuitData(player);
-            if (suitData != null)
-            {
-                int active = suitData.Parts.Count(p => p.GameObject != null);
-                Log.Debug($"[SLWardrobe] Suit '{suitName}' applied to {player.Nickname} ({active} active parts)");
-            }
+            // Re-apply persisted SSSS hide-own-suit preference; selfHiddenPlayers is cleared on reload
+            SsssHandler?.ApplyPersistedSuitVisibility(player);
+            FadeHandler?.ReapplyIfGranted(player);
         }
 
-        private List<BoneBinding> ConvertDefinitionToBindings(SuitDefinition definition)
+        private List<PartBinding> ConvertSuitToBindings(SuitDefinition definition)
         {
-            var bindings = new List<BoneBinding>();
-
+            var bindings = new List<PartBinding>();
             foreach (var part in definition.Parts)
             {
-                var binding = new BoneBinding(
-                    part.SchematicName,
-                    part.BoneName,
-                    definition.WearerType,
-                    new Vector3((float)part.PositionX, (float)part.PositionY, (float)part.PositionZ),
-                    new Vector3((float)part.RotationX, (float)part.RotationY, (float)part.RotationZ),
-                    new Vector3((float)part.ScaleX,    (float)part.ScaleY,    (float)part.ScaleZ)
-                );
-
-                binding.HideForWearer = part.HideForWearer;
-                binding.IsStaticPart = part.Static;
-                bindings.Add(binding);
+                bindings.Add(new PartBinding
+                {
+                    SchematicName = part.SchematicName,
+                    BoneName = part.BoneName,
+                    WearerType = definition.WearerType,
+                    LocalPosition = new Vector3((float)part.PositionX, (float)part.PositionY, (float)part.PositionZ),
+                    LocalRotation = new Vector3((float)part.RotationX, (float)part.RotationY, (float)part.RotationZ),
+                    Scale = new Vector3((float)part.ScaleX, (float)part.ScaleY, (float)part.ScaleZ),
+                    HideForWearer = part.HideForWearer,
+                    IsStatic = part.Static
+                });
             }
-
             return bindings;
         }
 
         public string GetPlayerSuitName(Player player)
-        {
-            return playerSuitNames.TryGetValue(player, out var name) ? name : null;
-        }
+            => playerSuitNames.TryGetValue(player, out var name) ? name : null;
 
         #endregion
 
@@ -313,16 +302,10 @@ namespace SLWardrobe
             {
                 HttpClient.DefaultRequestHeaders.Clear();
                 HttpClient.DefaultRequestHeaders.Add("User-Agent", $"SLWardrobe/{Version} ({BuildFramework})");
-
-                if (await TryJsonVersionCheck())
-                    return;
-
+                if (await TryJsonVersionCheck()) return;
                 await FallbackVersionCheck();
             }
-            catch (Exception ex)
-            {
-                Log.Debug($"[SLWardrobe] Could not check for updates: {ex.Message}");
-            }
+            catch (Exception ex) { GatedLogger.Debug($"[SLWardrobe] Update check failed: {ex.Message}"); }
         }
 
         private async Task<bool> TryJsonVersionCheck()
@@ -331,16 +314,11 @@ namespace SLWardrobe
             {
                 var json = await HttpClient.GetStringAsync(UPDATE_JSON_URL);
                 var info = System.Text.Json.JsonSerializer.Deserialize<UpdateInfo>(json);
-
-                if (info == null || string.IsNullOrEmpty(info.LatestVersion))
-                    return false;
-
-                if (!System.Version.TryParse(info.LatestVersion, out var latest))
-                    return false;
+                if (info == null || string.IsNullOrEmpty(info.LatestVersion)) return false;
+                if (!System.Version.TryParse(info.LatestVersion, out var latest)) return false;
 
                 var current = Version;
                 string framework = BuildFramework;
-
                 string severity = GetFrameworkValue(info.Severity, info.ExiledSeverity, info.LabApiSeverity, framework) ?? "none";
                 string alertMsg = GetFrameworkValue(info.AlertMessage, info.ExiledAlertMessage, info.LabApiAlertMessage, framework);
                 string minSafeStr = GetFrameworkValue(info.MinimumSafeVersion, info.ExiledMinimumSafeVersion, info.LabApiMinimumSafeVersion, framework);
@@ -351,56 +329,30 @@ namespace SLWardrobe
                     {
                         case "critical":
                         case "security":
-                            Log.Error("=========================================");
-                            Log.Error($"[SLWardrobe] CRITICAL UPDATE AVAILABLE: {current} -> {latest}");
-                            if (!string.IsNullOrEmpty(alertMsg))
-                                Log.Error($"[SLWardrobe] {alertMsg}");
-                            Log.Error("[SLWardrobe] https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
-                            Log.Error("=========================================");
+                            Log.Error($"[SLWardrobe] CRITICAL UPDATE AVAILABLE: {current} -> {latest}. " +
+                                      $"{(!string.IsNullOrEmpty(alertMsg) ? alertMsg + " " : "")}" +
+                                      "https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
                             break;
-
                         case "important":
-                            Log.Warn($"[SLWardrobe] Important update available: {current} -> {latest}");
-                            if (!string.IsNullOrEmpty(info.Changelog))
-                                Log.Warn($"[SLWardrobe] Changes: {info.Changelog}");
-                            Log.Warn("[SLWardrobe] https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
+                            Log.Warn($"[SLWardrobe] Important update available: {current} -> {latest}. " +
+                                     "https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
                             break;
-
-                        case "none":
-                        case "skip":
-                            Log.Info($"[SLWardrobe] Update {latest} available but not relevant for your {framework} build.");
+                        case "none": case "skip":
+                            GatedLogger.Debug($"[SLWardrobe] Update {latest} available but not relevant for your {framework} build.");
                             break;
-
                         default:
-                            Log.Warn($"[SLWardrobe] New version available: {current} -> {latest}");
-                            if (!string.IsNullOrEmpty(info.Changelog))
-                                Log.Info($"[SLWardrobe] Changes: {info.Changelog}");
-                            Log.Info("[SLWardrobe] https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
+                            Log.Info($"[SLWardrobe] New version available: {current} -> {latest}. " +
+                                     "https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
                             break;
                     }
-
-                    if (!string.IsNullOrEmpty(minSafeStr) &&
-                        System.Version.TryParse(minSafeStr, out var minSafe) &&
-                        current < minSafe)
-                    {
+                    if (!string.IsNullOrEmpty(minSafeStr) && System.Version.TryParse(minSafeStr, out var minSafe) && current < minSafe)
                         Log.Error($"[SLWardrobe] Your version ({current}) is below minimum safe ({minSafe}) for {framework}. Update immediately.");
-                    }
                 }
-                else if (latest < current)
-                {
-                    Log.Info($"[SLWardrobe] Running development version: {current} (latest stable: {latest})");
-                }
-                else
-                {
-                    Log.Info($"[SLWardrobe] Running latest version ({current})");
-                }
-
+                else if (latest < current) GatedLogger.Debug($"[SLWardrobe] Running development version: {current} (latest stable: {latest})");
+                else GatedLogger.Debug($"[SLWardrobe] Running latest version ({current})");
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
         }
 
         private static string GetFrameworkValue(string global, string exiledValue, string labApiValue, string framework)
@@ -412,20 +364,11 @@ namespace SLWardrobe
         private async Task FallbackVersionCheck()
         {
             string latestVersion = (await HttpClient.GetStringAsync(VERSION_URL)).Trim();
-
             if (System.Version.TryParse(latestVersion, out var latest) && latest > Version)
-            {
-                Log.Warn($"[SLWardrobe] New version available! Current: {Version} | Latest: {latestVersion}");
-                Log.Warn("[SLWardrobe] https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
-            }
-            else if (latest != null && latest < Version)
-            {
-                Log.Info($"[SLWardrobe] Running development version: {Version} (latest stable: {latestVersion})");
-            }
-            else
-            {
-                Log.Info($"[SLWardrobe] Running latest version ({Version})");
-            }
+                Log.Warn($"[SLWardrobe] New version available: {Version} -> {latestVersion}. " +
+                         "https://github.com/ChochoZagorski/SLWardrobe/releases/latest");
+            else if (latest != null && latest < Version) GatedLogger.Debug($"[SLWardrobe] Running development version: {Version} (latest stable: {latestVersion})");
+            else GatedLogger.Debug($"[SLWardrobe] Running latest version ({Version})");
         }
 
         #endregion
@@ -435,17 +378,14 @@ namespace SLWardrobe
     {
         public string LatestVersion { get; set; }
         public string Changelog { get; set; }
-
         public string Severity { get; set; }
         public string AlertMessage { get; set; }
         public string MinimumSafeVersion { get; set; }
-
         public string ExiledSeverity { get; set; }
         public string ExiledAlertMessage { get; set; }
         public string ExiledMinimumSafeVersion { get; set; }
-
         public string LabApiSeverity { get; set; }
         public string LabApiAlertMessage { get; set; }
         public string LabApiMinimumSafeVersion { get; set; }
     }
-}
+}     
